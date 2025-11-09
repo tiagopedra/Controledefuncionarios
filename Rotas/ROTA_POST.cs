@@ -77,7 +77,7 @@ public static class ROTA_POST
         
         app.MapPost("/api/funcionario", async (Funcionario funcionario, AppDbContext context) =>
         {
-            // Validar existência dos IDs relacionados
+            
             var cargo = await context.Cargos.FindAsync(funcionario.cargoId);
             if (cargo == null)
                 return Results.BadRequest($"Cargo com id {funcionario.cargoId} não existe.");
@@ -94,10 +94,10 @@ public static class ROTA_POST
             if (endereco == null)
                 return Results.BadRequest($"Endereco com id {funcionario.enderecoID} não existe.");
 
-            // Validar e criar pessoa se necessário
+            
             if (funcionario.pessoa != null)
             {
-                // Se pessoa já existe, buscar pelo CPF
+                
                 var pessoaExistente = await context.Pessoas.FirstOrDefaultAsync(p => p.cpf == funcionario.pessoa.cpf);
                 if (pessoaExistente != null)
                 {
@@ -106,7 +106,7 @@ public static class ROTA_POST
                 }
                 else
                 {
-                    // Criar nova pessoa
+                    
                     var novaPessoa = funcionario.pessoa;
                     context.Pessoas.Add(novaPessoa);
                     await context.SaveChangesAsync();
@@ -116,12 +116,12 @@ public static class ROTA_POST
             }
             else
             {
-                // Se pessoaId não está definido, retornar erro
+                
                 if (funcionario.pessoaId <= 0)
                     return Results.BadRequest("Pessoa ou pessoaId é obrigatório.");
             }
 
-            // Limpar objetos complexos para evitar erro de tracking
+            
             funcionario.cargo = null;
             funcionario.setor = null;
             funcionario.dadosBancarios = null;
@@ -136,7 +136,7 @@ public static class ROTA_POST
             {
                 return Results.Problem($"Erro ao salvar funcionário: {ex.Message}");
             }
-            // Buscar novamente o funcionário com os includes para retornar os dados completos
+            
             var funcionarioCompleto = await context.Funcionarios
                 .Include(f => f.pessoa)
                 .Include(f => f.setor)
@@ -147,7 +147,7 @@ public static class ROTA_POST
             return Results.Created($"/api/funcionario/{funcionario.id}", funcionarioCompleto);
         });
 
-        // PUT /api/cargo/{id}
+        
         app.MapPut("/api/cargo/{id}", async (int id, Cargo cargoAtualizado, AppDbContext context) =>
         {
             var cargoExistente = await context.Cargos.FindAsync(id);
@@ -159,7 +159,7 @@ public static class ROTA_POST
             return Results.Ok(cargoExistente);
         });
 
-        // PUT /api/setor/{id}
+        
         app.MapPut("/api/setor/{id}", async (int id, Setor setorAtualizado, AppDbContext context) => 
         {
             var setorExistente = await context.Setores.FindAsync(id);
@@ -171,14 +171,14 @@ public static class ROTA_POST
             return Results.Ok(setorExistente);
         });
 
-        // PUT /api/funcionario/{id}
+        
         app.MapPut("/api/funcionario/{id}", async (int id, Funcionario funcionario, AppDbContext context) =>
         {
             var funcionarioExistente = await context.Funcionarios.FindAsync(id);
             if (funcionarioExistente == null)
                 return Results.NotFound($"Funcionário com id {id} não encontrado.");
 
-            // Validar existência dos IDs relacionados
+           
             var cargo = await context.Cargos.FindAsync(funcionario.cargoId);
             if (cargo == null)
                 return Results.BadRequest($"Cargo com id {funcionario.cargoId} não existe.");
@@ -195,13 +195,13 @@ public static class ROTA_POST
             if (endereco == null)
                 return Results.BadRequest($"Endereco com id {funcionario.enderecoID} não existe.");
 
-            // Validar e criar pessoa se necessário
+            
             if (funcionario.pessoa != null)
             {
                 var pessoaExistente = await context.Pessoas.FirstOrDefaultAsync(p => p.cpf == funcionario.pessoa.cpf);
                 if (pessoaExistente != null)
                 {
-                    // Atualiza os campos da pessoa existente com os valores recebidos
+                    
                     pessoaExistente.nome = funcionario.pessoa.nome;
                     pessoaExistente.sexo = funcionario.pessoa.sexo;
                     pessoaExistente.telefone = funcionario.pessoa.telefone;
@@ -224,7 +224,7 @@ public static class ROTA_POST
                 funcionarioExistente.pessoaId = funcionario.pessoaId;
             }
 
-            // Atualizar os campos do funcionário existente
+            
             funcionarioExistente.cargoId = funcionario.cargoId;
             funcionarioExistente.setorId = funcionario.setorId;
             funcionarioExistente.dadosBancariosId = funcionario.dadosBancariosId;
@@ -240,7 +240,7 @@ public static class ROTA_POST
             {
                 return Results.Problem($"Erro ao atualizar funcionário: {ex.Message}");
             }
-            // Buscar novamente o funcionário com os includes
+            
             var funcionarioCompleto = await context.Funcionarios
                 .Include(f => f.pessoa)
                 .Include(f => f.setor)

@@ -170,7 +170,7 @@ body {
     align-items: center;
 }
 
-/* Centraliza o conteúdo interno do card */
+
 #content > * {
     width: 100%;
 }
@@ -185,7 +185,7 @@ body {
 }
 
 
-/* Ajuste para modais e tabelas manterem o visual clean */
+
 .modal-content {
     border-radius: 14px;
     box-shadow: 0 4px 24px 0 #10162422;

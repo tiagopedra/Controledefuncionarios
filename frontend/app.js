@@ -1,7 +1,7 @@
-// app.js profissional
+
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Dados simulados
+    
     let funcionarios = [];
     let cargos = [];
     let setores = [];
@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
         await carregarSetores();
         showSetores();
     });
-    // Exibir Funcionários por padrão
+    
     Promise.all([carregarCargos(), carregarSetores(), carregarDadosBancarios(), carregarEnderecos()]).then(carregarFuncionarios);
 
-    // Funções para carregar dados bancários e endereços
+    
     async function carregarDadosBancarios() {
         try {
             const resp = await fetch('http://localhost:5077/api/dadosbancarios');
@@ -42,10 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Funções de renderização
+   
     async function showFuncionarios() {
     console.log('Funcionários renderizados:', funcionarios);
     let funcionariosFiltrados = funcionarios;
+        
+        const totalSalarios = funcionariosFiltrados.reduce((acc, f) => acc + (typeof f.salario === 'number' ? f.salario : 0), 0);
         content.innerHTML = `
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="mb-0">Funcionários</h2>
@@ -56,33 +58,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button id="add-funcionario" class="btn btn-success"><i class="bi bi-plus-circle"></i> Novo Funcionário</button>
             </div>
             <div id="alert-area"></div>
+            <div class="alert alert-info text-center fw-bold fs-4 mb-3 shadow-sm" style="max-width:400px;margin:auto;">
+                <i class="bi bi-cash-coin me-2"></i> Total dos salários:<br>
+                <span id="total-salarios" class="fs-2 text-success">R$ ${totalSalarios.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped align-middle">
                     <thead class="table-dark">
-                        <tr><th>Nome</th><th>Cargo</th><th>Setor</th><th class="text-end">Ações</th></tr>
+                        <tr><th>Nome</th><th>Cargo</th><th>Setor</th><th>Salário</th><th class="text-end">Ações</th></tr>
                     </thead>
                     <tbody>
                         ${funcionariosFiltrados.map(f => {
                         console.log('Renderizando funcionário:', f);
                         return `
                         <tr>
-                            <td>
-                                <div><strong>${f.pessoa?.nome || ''}</strong></div>
-                                
-                            </td>
-                            <td>
-                                <div>${f.cargo?.nome || '<span style="color:red">Sem cargo</span>'}</div>
-                                
-                            </td>
-                            <td>
-                                <div>${f.setor?.nome || '<span style="color:red">Sem setor</span>'}</div>
-                                
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-primary btn-sm me-1" data-edit="${f.id}"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-danger btn-sm" data-delete="${f.id}"><i class="bi bi-trash"></i></button>
-                            </td>
-                        </tr>
+    <td>
+        <div><strong>${f.pessoa?.nome || ''}</strong></div>
+    </td>
+    <td>
+        <div>${f.cargo?.nome || '<span style="color:red">Sem cargo</span>'}</div>
+    </td>
+    <td>
+        <div>${f.setor?.nome || '<span style="color:red">Sem setor</span>'}</div>
+    </td>
+    <td>
+        <div>${f.salario != null ? `R$ ${Number(f.salario).toLocaleString('pt-BR', {minimumFractionDigits: 2})}` : '<span style="color:red">Não informado</span>'}</div>
+    </td>
+    <td class="text-end">
+        <button class="btn btn-primary btn-sm me-1" data-edit="${f.id}"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-danger btn-sm" data-delete="${f.id}"><i class="bi bi-trash"></i></button>
+    </td>
+</tr>
                         `;
                     }).join('')}
                     </tbody>
@@ -109,7 +115,7 @@ tbody.innerHTML = filtrados.map(f => `
     </td>
 </tr>
 `).join('');
-// Reaplicar eventos
+
 tbody.querySelectorAll('[data-edit]').forEach(btn => {
     btn.onclick = () => abrirModalFuncionario(parseInt(btn.getAttribute('data-edit')));
 });
@@ -158,7 +164,7 @@ document.getElementById('btn-search-funcionario').addEventListener('click', filt
         }
     }
 
-    // Modal de cadastro/edição
+    
     function abrirModalFuncionario(id) {
         const modal = new bootstrap.Modal(document.getElementById('mainModal'));
         const funcionario = id ? funcionarios.find(f => f.id === id) : { pessoa: { nome: '' }, cargo: cargos[0] || {}, setor: setores[0] || {} };
@@ -212,6 +218,10 @@ document.getElementById('btn-search-funcionario').addEventListener('click', filt
                     </select>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Salário</label>
+                    <input type="number" min="0" step="0.01" class="form-control" id="salario" value="${funcionario.salario != null ? funcionario.salario : ''}" required>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Endereço</label>
                     <select class="form-select" id="enderecoID" required>
                         <option value="">Selecione...</option>
@@ -248,8 +258,13 @@ document.getElementById('btn-search-funcionario').addEventListener('click', filt
         const dadosBancarios = dadosBancariosList.find(db => db.id === dadosBancariosId);
         const endereco = enderecosList.find(e => e.id === enderecoID);
         
-        const body = JSON.stringify({ pessoa: { nome, cpf, sexo, telefone, email }, cargoId, setorId, dadosBancariosId, enderecoID });
-        console.log('Enviando para o backend:', { pessoa: { nome, cpf, sexo, telefone, email }, cargoId, setorId, dadosBancariosId, enderecoID });
+        const salario = parseFloat(document.getElementById('salario').value);
+if (isNaN(salario) || salario < 0) {
+    mostrarAlerta('Informe um salário válido.', 'danger');
+    return;
+}
+const body = JSON.stringify({ pessoa: { nome, cpf, sexo, telefone, email }, cargoId, setorId, dadosBancariosId, enderecoID, salario });
+console.log('Enviando para o backend:', { pessoa: { nome, cpf, sexo, telefone, email }, cargoId, setorId, dadosBancariosId, enderecoID, salario });
         try {
             if (editandoFuncionarioId) {
                 
@@ -500,7 +515,7 @@ document.getElementById('btn-search-setor').addEventListener('click', filtrarSet
         modal.show();
     }
 
-    // Agora as funções ficam no escopo principal:
+    
     async function salvarSetor(id) {
         const nome = document.getElementById('nomeSetor').value.trim();
         if (!nome) {

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\asusv\\Downloads\\Nova pasta (6)\\ControleDeFuncionarios\\ControleDeFuncionarios.csproj": {}
+    "/Users/tiagopedra/Downloads/Arquivo 2/Matheus João Corrêa_Breno Andrade da Silva_Cadastro de Funcionários/Project---Api/ControleDeFuncionarios.csproj": {}
   },
   "projects": {
-    "C:\\Users\\asusv\\Downloads\\Nova pasta (6)\\ControleDeFuncionarios\\ControleDeFuncionarios.csproj": {
+    "/Users/tiagopedra/Downloads/Arquivo 2/Matheus João Corrêa_Breno Andrade da Silva_Cadastro de Funcionários/Project---Api/ControleDeFuncionarios.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\asusv\\Downloads\\Nova pasta (6)\\ControleDeFuncionarios\\ControleDeFuncionarios.csproj",
+        "projectUniqueName": "/Users/tiagopedra/Downloads/Arquivo 2/Matheus João Corrêa_Breno Andrade da Silva_Cadastro de Funcionários/Project---Api/ControleDeFuncionarios.csproj",
         "projectName": "ControleDeFuncionarios",
-        "projectPath": "C:\\Users\\asusv\\Downloads\\Nova pasta (6)\\ControleDeFuncionarios\\ControleDeFuncionarios.csproj",
-        "packagesPath": "C:\\Users\\asusv\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\asusv\\Downloads\\Nova pasta (6)\\ControleDeFuncionarios\\obj\\",
+        "projectPath": "/Users/tiagopedra/Downloads/Arquivo 2/Matheus João Corrêa_Breno Andrade da Silva_Cadastro de Funcionários/Project---Api/ControleDeFuncionarios.csproj",
+        "packagesPath": "/Users/tiagopedra/.nuget/packages/",
+        "outputPath": "/Users/tiagopedra/Downloads/Arquivo 2/Matheus João Corrêa_Breno Andrade da Silva_Cadastro de Funcionários/Project---Api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\asusv\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/tiagopedra/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -73,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
